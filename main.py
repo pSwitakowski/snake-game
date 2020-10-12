@@ -3,6 +3,7 @@ import time
 import pygame
 from snake import *
 import config
+from food import *
 
 
 pygame.init()
@@ -15,6 +16,8 @@ pygame.display.update()
 clock = pygame.time.Clock()
 
 snake = Snake()
+food = Food()
+print(f"food pos: ({food.rect.x},{food.rect.y})")
 
 font_style = pygame.font.SysFont(None, 50)
 
@@ -28,8 +31,6 @@ crashed = False
 while not crashed:
     dt = clock.tick(config.FPS) / 1000
 
-    if snake.crashed:
-        crashed = True
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -44,14 +45,18 @@ while not crashed:
             elif event.key == pygame.K_DOWN:
                 snake.set_direction('DOWN')
 
+    if snake.crashed:
+        crashed = True
 
     screen.fill(config.BACKGROUND)
+
+    food.update()
+    screen.blit(food.image, food.rect)
+
     snake.update()
+    screen.blit(snake.image, snake.head)
 
-    screen.blit(snake.image, snake.rect)
     pygame.display.update()
-
-
 
 
 message("GAME OVER", (255, 0, 0))

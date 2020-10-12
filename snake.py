@@ -15,27 +15,30 @@ class Snake(pygame.sprite.Sprite):
         super().__init__()
         self.width = 20
         self.height = 20
+
         self.image = pygame.Surface((self.width, self.height))
-        self.default_color = (0, 230, 50, 220)
-        self.image.fill(self.default_color)
-        self.rect = self.image.get_rect()
-        self.rect.x = (config.WIDTH / 2) - self.width
-        self.rect.y = (config.HEIGHT / 2) - self.height
+        self.image.fill((0, 230, 50))
+
+        self.head = self.image.get_rect()
+        self.head.x = (config.WIDTH / 2) - self.width
+        self.head.y = (config.HEIGHT / 2) - self.height
+        self.tail = []
+
         self.direction = [0, 0]
         self.crashed = False
 
     def update(self):
-        print("snake pos: (", self.rect.x, ',', self.rect.y, ')')
+        print("snake pos: (", self.head.x, ',', self.head.y, ')')
 
-        at_left_border = self.rect.x <= 0
-        at_right_border = self.rect.x + self.width >= config.WIDTH
-        at_top_border = self.rect.y <= 0
-        at_bottom_border = self.rect.y + self.height >= config.HEIGHT
+        at_left_border = self.head.x <= 0
+        at_right_border = self.head.x + self.width >= config.WIDTH
+        at_top_border = self.head.y <= 0
+        at_bottom_border = self.head.y + self.height >= config.HEIGHT
 
         self.crashed = at_left_border or at_right_border or at_top_border or at_bottom_border
 
         if not self.crashed:
-            self.rect.move_ip(*self.direction)
+            self.head.move_ip(*self.direction)
 
     def set_direction(self, new_direction):
         if new_direction == "RIGHT":
