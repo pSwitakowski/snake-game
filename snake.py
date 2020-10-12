@@ -2,58 +2,48 @@ import pygame
 import enum
 import config
 
-LOW = config.WIDTH / 50
-# MEDIUM = 2 * LOW
-# FAST = 3 * LOW
-# EXPERT = 4 * LOW
+SPEED = 20
 
-LEFT = [-config.WIDTH / 50, 0]
-RIGHT = [config.WIDTH / 50, 0]
-UP = [0, -config.WIDTH / 50]
-DOWN = [0, config.WIDTH / 50]
+LEFT = [-SPEED, 0]
+RIGHT = [SPEED, 0]
+UP = [0, -SPEED]
+DOWN = [0, SPEED]
 
 
 class Snake(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.width = 50
-        self.height = 50
+        self.width = 20
+        self.height = 20
         self.image = pygame.Surface((self.width, self.height))
         self.default_color = (0, 230, 50, 220)
         self.image.fill(self.default_color)
         self.rect = self.image.get_rect()
-        self.rect.x = config.WIDTH / 2
-        self.rect.y = config.HEIGHT / 2
-        self.at_border = False
-
-        self.velocity = UP
+        self.rect.x = (config.WIDTH / 2) - self.width
+        self.rect.y = (config.HEIGHT / 2) - self.height
+        self.direction = [0, 0]
+        self.crashed = False
 
     def update(self):
+        print("snake pos: (", self.rect.x, ',', self.rect.y, ')')
 
         at_left_border = self.rect.x <= 0
         at_right_border = self.rect.x + self.width >= config.WIDTH
         at_top_border = self.rect.y <= 0
         at_bottom_border = self.rect.y + self.height >= config.HEIGHT
-        self.at_border = [at_left_border, at_right_border, at_top_border, at_bottom_border]
 
-        if True not in self.at_border:
-            self.rect.move_ip(*self.velocity)
+        self.crashed = at_left_border or at_right_border or at_top_border or at_bottom_border
 
+        if not self.crashed:
+            self.rect.move_ip(*self.direction)
 
-    def reset_at_border(self):
-        self.at_border = [False, False, False, False]
-
-    def set_velocity(self, new_direction):
+    def set_direction(self, new_direction):
         if new_direction == "RIGHT":
-            self.reset_at_border()
-            self.velocity = RIGHT
+            self.direction = RIGHT
         elif new_direction == "LEFT":
-            self.reset_at_border()
-            self.velocity = LEFT
+            self.direction = LEFT
         elif new_direction == "UP":
-            self.reset_at_border()
-            self.velocity = UP
+            self.direction = UP
         elif new_direction == "DOWN":
-            self.reset_at_border()
-            self.velocity = DOWN
+            self.direction = DOWN
 
