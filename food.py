@@ -12,6 +12,7 @@ class Food(pygame.sprite.Sprite):
         self.image.fill((120, 60, 200))
 
         self.rect = self.image.get_rect()
-        self.rect.x = random.choice([i for i in range(0, config.WIDTH+20, 20)])
-        self.rect.y = random.choice([i for i in range(0, config.HEIGHT+20, 20)])
+        self.rect.x = random.choice([i for i in range(0, config.WIDTH, 20)])
+        self.rect.y = random.choice([i for i in range(0, config.HEIGHT, 20)])
+        print(f"food pos: ({self.rect.x},{self.rect.y})")
 

@@ -23,30 +23,37 @@ class Snake(pygame.sprite.Sprite):
         self.head.x = (config.WIDTH / 2) - self.width
         self.head.y = (config.HEIGHT / 2) - self.height
         self.tail = []
+        self.length = 1
 
         self.direction = [0, 0]
         self.crashed = False
 
     def update(self):
-        print("snake pos: (", self.head.x, ',', self.head.y, ')')
-
-        at_left_border = self.head.x <= 0
-        at_right_border = self.head.x + self.width >= config.WIDTH
-        at_top_border = self.head.y <= 0
-        at_bottom_border = self.head.y + self.height >= config.HEIGHT
+        at_left_border = self.head.x < 0
+        at_right_border = self.head.x + self.width > config.WIDTH
+        at_top_border = self.head.y < 0
+        at_bottom_border = self.head.y + self.height > config.HEIGHT
 
         self.crashed = at_left_border or at_right_border or at_top_border or at_bottom_border
 
         if not self.crashed:
             self.head.move_ip(*self.direction)
+            print("snake pos: (", self.head.x, ',', self.head.y, ')')
 
     def set_direction(self, new_direction):
         if new_direction == "RIGHT":
-            self.direction = RIGHT
+            if self.direction != LEFT:
+                self.direction = RIGHT
         elif new_direction == "LEFT":
-            self.direction = LEFT
+            if self.direction != RIGHT:
+                self.direction = LEFT
         elif new_direction == "UP":
-            self.direction = UP
+            if self.direction != DOWN:
+                self.direction = UP
         elif new_direction == "DOWN":
-            self.direction = DOWN
+            if self.direction != UP:
+                self.direction = DOWN
 
+    def increase_tail(self):
+        self.length += 1
+        print('YUMMY')
