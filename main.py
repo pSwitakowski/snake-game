@@ -18,12 +18,19 @@ clock = pygame.time.Clock()
 
 
 
-font_style = pygame.font.SysFont(None, 50)
+game_over_font = pygame.font.SysFont(None, 50)
+score_font = pygame.font.SysFont(None, 100)
 
 
-def message(text, color):
-    message = font_style.render(text, True, color)
-    screen.blit(message, [int(config.WIDTH/5), int(config.HEIGHT/4)])
+def show_game_over_text():
+    message = game_over_font.render('Game over! R - restart   Q - quit', True, (255, 0, 0))
+    screen.blit(message, [int(config.WIDTH/2) - int(message.get_width()/2), int(config.HEIGHT/4)])
+
+
+def show_score_text(score):
+    message = score_font.render(score, True, (255, 223, 0))
+    screen.blit(message, [int(config.WIDTH/2) - int(message.get_width()/2), 20])
+
 
 def game_loop():
     snake = Snake()
@@ -34,6 +41,8 @@ def game_loop():
 
     while not game_quit:
         clock.tick(config.FPS)
+        snake.movable = True
+        # pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -50,34 +59,49 @@ def game_loop():
                 elif event.key == pygame.K_DOWN:
                     snake.set_direction('DOWN')
 
+        snake.check_self_crash()
 
+        if snake.crashed:
+            game_lost = True
 
-        screen.fill(config.BACKGROUND)
-        snake.update()
-        screen.blit(snake.image, snake.head)
-
-        if(snake.head.x == food.rect.x and snake.head.y == food.rect.y):
-            food = Food()
-            snake.increase_tail()
-
-        if snake.crashed: game_lost = True
         while game_lost:
             screen.fill(config.BACKGROUND)
-            message('Game over! R - restart   Q - quit', (255, 0, 0))
+            show_game_over_text()
+            show_score_text(str(snake.length-1))
             pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
+                        config.FPS = 10
                         game_loop()
                     elif event.key == pygame.K_q:
-                        game_quit = True
                         game_lost = False
+                        game_quit = True
                         break
+
+
+
+        screen.fill(config.BACKGROUND)
+        # ---------------------------
+
+
+        snake.update()
+        for part in snake.body:
+            screen.blit(snake.image, [part.x, part.y])
+
+        # check food collision
+        if snake.head == food:
+            config.FPS += 1
+            food = Food()
+            snake.increase_tail(food)
+
+        show_score_text(str(snake.length-1))
 
         food.update()
         screen.blit(food.image, food.rect)
 
+        # ----------------------------
         pygame.display.update()
 
 
