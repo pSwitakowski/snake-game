@@ -17,7 +17,7 @@ class Snake(pygame.sprite.Sprite):
         self.height = 20
 
         self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(((random.randrange(0, 255)), random.randrange(0, 255), random.randrange(0, 255)))
+        self.image.fill((random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)))
 
         self.head = self.image.get_rect()
         self.head.x = (config.WIDTH / 2) - self.width
@@ -41,17 +41,11 @@ class Snake(pygame.sprite.Sprite):
 
         if not self.crashed:
             new_part = pygame.rect.Rect((self.body[0].x + self.direction[0], self.body[0].y + self.direction[1]), (20, 20))
-            # new_part.x = self.body[0].x + self.direction[0]
-            # new_part.y = self.body[0].y + self.direction[1]
 
             del self.body[-1]
 
             self.body.insert(0, new_part)
             self.head = self.body[0]
-
-            print(self.body)
-            # self.head.move_ip(*self.direction)
-            # print(f"snake head pos: ({self.head.x},{self.head.y})")
 
     def set_direction(self, new_direction):
         if self.movable:
@@ -91,5 +85,3 @@ class Snake(pygame.sprite.Sprite):
             for part in self.body[1:]:
                 if self.head == part:
                     self.crashed = True
-        # for part in self.body:
-        #     print(part.image.get_at(1,1), ',')

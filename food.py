@@ -10,7 +10,7 @@ class Food(pygame.sprite.Sprite):
         self.height = 20
 
         self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(((random.randrange(0, 255)), random.randrange(0, 255), random.randrange(0, 255)))
+        self.image.fill((random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)))
 
         self.rect = self.image.get_rect()
         self.rect.x = random.choice([i for i in range(0, config.WIDTH, 20)])
